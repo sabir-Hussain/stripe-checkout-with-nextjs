@@ -2,7 +2,6 @@ import Link from 'next/link';
 import React from 'react'
 
 function ProductCard({product}) {
-    console.log(product);
     const { name, metadata } = product;
 
     const pricingURL = `/pricing/${metadata.slug}`
