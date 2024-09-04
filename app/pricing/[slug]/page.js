@@ -1,71 +1,24 @@
-'use client'
+import PricingSection from "@/app/components/PricingSection";
+import Stripe from "stripe";
 
-import React, { useEffect, useState } from 'react'
-import axios from 'axios';
-import { usePathname } from 'next/navigation';
-import PricingSection from '@/app/components/PricingSection';
+const PricingPage = async ({ params }) => {
+  const { slug } = params;
 
-function pricingPage() {
-  const [pricingItems, setPricingItems] = useState([]);
-  const pathname = usePathname()
-  const slug= pathname.split('/').pop();
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+  const products = await stripe.products.list();
+  const product = products.data.find(
+    (product) => product.metadata.slug === slug
+  );
 
-  console.log(slug)
-
-
-
-  function getProducts() {
-    axios.get('/api/getproducts')
-    .then(res => {
-      const product = res.data.data.find(product => product.metadata.slug === slug);
-      getPricingByProductId(product.id);
-    })
-    .catch(err => {
-        console.log(err);
-    })
-}
-
-
-  function getPricingByProductId(productId) {
-    axios.get(`/api/pricing`, {
-        params: {
-            productId: productId
-        }
-    })
-    .then(res => {
-      setPricingItems(res.data.data);
-    })
-    .catch(err => {
-        console.log(err);
-    })
-}
-
-useEffect(() => {
-    getProducts();
-}, [])
-
-
-  const handleSubscribe = async ({priceId}) => {
-    console.log('handleSubscribe called');
-
-    const { data }  = await axios.post('/api/payment', {
-      priceId: priceId,
-    },
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },  
-    })
-    window.location.assign(data)
-  }
-
+  const pricingItems = await stripe.prices.list({
+    product: product.id,
+  });
 
   return (
     <div className="container mx-auto px-6">
-      <PricingSection pricingItems={pricingItems} handleSubscribe={handleSubscribe} />
-    </div> 
-  )
-}
+      {pricingItems && <PricingSection pricingItems={pricingItems.data} />}
+    </div>
+  );
+};
 
-export default pricingPage
+export default PricingPage;

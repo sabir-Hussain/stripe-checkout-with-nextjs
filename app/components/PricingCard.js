@@ -1,8 +1,6 @@
-import React from 'react'
 import SubscribeButton from './SubscribeButton';
 
-function PricingCard({pricingItem, handleSubscribe}) {
-    console.log('pricingItem', pricingItem);
+function PricingCard({pricingItem}) {
     const { id:priceId, billing_scheme, currency, nickname, product:productId, unit_amount, recurring    } = pricingItem;
     const amount = unit_amount / 100;
     const amountFormatted = amount.toLocaleString("en-US",{style: 'currency',currency: currency.toUpperCase(),minimumFractionDigits: 0,maximumFractionDigits: 0,});
@@ -18,7 +16,7 @@ function PricingCard({pricingItem, handleSubscribe}) {
             {amountFormatted} 
             {/* / {currency} / per {recurring} */}
         </p>
-        <SubscribeButton priceId={priceId} handleSubscribe={handleSubscribe} />
+        <SubscribeButton priceId={priceId} />
     </div>
   )
 }

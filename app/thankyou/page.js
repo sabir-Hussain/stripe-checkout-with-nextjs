@@ -1,6 +1,4 @@
-import React from 'react'
-
-function thankyouPage() {
+function ThankyouPage() {
   return (
     <div className="container textcenter mx-auto mt-10 border-t border-gray-200 pt-10 ">
        <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Payment Successful!</h5>
@@ -9,4 +7,4 @@ function thankyouPage() {
   )
 }
 
-export default thankyouPage
+export default ThankyouPage
