@@ -2,21 +2,16 @@
 import axios from "axios";
 
 function SubscribeButton({ priceId }) {
+
   const handleSubscribe = async () => {
-    const { data } = await axios.post(
-      "/api/payment",
-      {
-        priceId: priceId,
-      },
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    window.location.assign(data);
+    try {
+      const { data } = await axios.post("/api/payment", { priceId });
+      window.location.assign(data);
+    } catch (error) {
+      console.error('Failed to create payment session:', error);
+    }
   };
+  
 
   return (
     <button
